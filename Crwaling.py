@@ -31,19 +31,19 @@ while(True):
         break
 
 
-
+#reviews 변수에 댓글을 저장
 reviews = driver.find_elements(By.CSS_SELECTOR , 'span.u_cbox_contents')
 reviews = [reviews.text for reviews in reviews]
-
+#up변수에 공감수를 저장
 up = driver.find_elements(By.CSS_SELECTOR,'em.u_cbox_cnt_recomm')
 up = [up.text for up in up]
-
+#down변수에 비공감 수를 저장
 down = driver.find_elements(By.CSS_SELECTOR,'em.u_cbox_cnt_unrecomm')
 down = [down.text for down in down]
-
+#댓글, 공감 수, 비공감 수를 합침.
 reply = list(zip(reviews , up , down))
 print(reply)
-
+#reply를 txt파일로 작성하는 과정.
 f = open("C:/Users/Me/Desktop/KFCW2V/comments_crwalling/crawlling.txt" , 'w')
 for data in reply:
     list(data)
