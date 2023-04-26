@@ -1,5 +1,4 @@
 #import 라이브러리&모듈
-from bs4 import BeautifulSoup as bs
 from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
@@ -9,7 +8,6 @@ import time
 from selenium.webdriver.common.keys import Keys
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QBasicTimer
 
 #Interface만들기
 class Myapp(QMainWindow):
