@@ -27,28 +27,23 @@ class Myapp(QMainWindow):
         self.statusBar().showMessage('Ready')
         #입력기 설정
         self.addQLineEdit()
-        #상태 진항 바 표시
-        self.pbar = QProgressBar(self)
-        self.pbar.setGeometry(30, 300, 200, 25)
-        #타이머 
-        self.timer = QBasicTimer()
-        self.step = 0
+
         #버튼
         btn1 = QPushButton('시작', self)
-
         btn1.setCheckable(True)
         btn1.toggle()
-
         vbox = QVBoxLayout()
         vbox.addWidget(btn1)
         self.setLayout(vbox)
+
         #버튼 연결
         btn1.clicked.connect(self.functionStart)
+
         #ui보이기
         self.resize(500, 350)
         self.center()
         self.show()
-    
+    #텍스트 입력(여기서는 주소와 디렉토리)
     def addQLineEdit(self):
         QLabel('파일이 저장될 위치.:' , self)
         QLabel('기사 url.:' , self)
@@ -64,7 +59,9 @@ class Myapp(QMainWindow):
         self.url.setPlaceholderText('URL입력:')
         self.url.textChanged.connect(self.save_URL)
     
+    #디렉토리 저장
     def save_DT(self):
+        #주소 전처리
         temp_list = []
         second_directory = ''
         for temp in self.dt_entry.text():
@@ -73,25 +70,16 @@ class Myapp(QMainWindow):
                 temp_list.append(temp)
             else:
                 temp_list.append(temp)
+        #주소 저장
         global directory
         directory = second_directory.join(temp_list)
         directory = directory + "/crwalling.txt"
 
-    
+    #인터넷 기사 주소 저장    
     def save_URL(self):
         global real_url
         real_url = self.url.text()
         print(real_url)
-
-    #타이머
-    def timerEvent(self, e):
-        if self.step >= 100:
-            self.timer.stop()
-            self.btn.setText('Finished')
-            return
-
-        self.step = self.step + 1
-        self.pbar.setValue(self.step)
     
     #버튼에 연결된 코드
     def functionStart(self):
