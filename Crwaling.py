@@ -8,19 +8,18 @@ import time
 from selenium.webdriver.common.keys import Keys
 import sys
 from PyQt5.QtWidgets import *
+import requests
 
-#Interface만들기
-class Myapp(QMainWindow):
+class naverland(QMainWindow):
     #초기 설정
     def __init__(self):
         super().__init__()
         self.initUI()
 
-
-    #UI설정
+ #UI설정
     def initUI(self):
         #제목 설정
-        self.setWindowTitle("네이버 기사 크롤링")
+        self.setWindowTitle("네이버 부동산 크롤링")
         #하단 바에 상태 표시
         self.statusBar().showMessage('Ready')
         #입력기 설정
@@ -30,21 +29,23 @@ class Myapp(QMainWindow):
         btn1 = QPushButton('시작', self)
         btn1.setCheckable(True)
         btn1.toggle()
+
         vbox = QVBoxLayout()
         vbox.addWidget(btn1)
         self.setLayout(vbox)
 
         #버튼 연결
         btn1.clicked.connect(self.functionStart)
-
         #ui보이기
         self.resize(500, 350)
         self.center()
         self.show()
+
+
     #텍스트 입력(여기서는 주소와 디렉토리)
     def addQLineEdit(self):
         QLabel('파일이 저장될 위치.:' , self)
-        QLabel('기사 url.:' , self)
+        QLabel('네이버 부동산 url.:' , self)
         self.able_label = QLabel('' , self)
         #input directory
         self.dt_entry = QLineEdit(self)
@@ -71,17 +72,18 @@ class Myapp(QMainWindow):
         #주소 저장
         global directory
         directory = second_directory.join(temp_list)
-        directory = directory + "/crwalling.txt"
+        directory = directory + "/crwalling_land.txt"
+        print(directory)
 
     #인터넷 기사 주소 저장    
     def save_URL(self):
         global real_url
         real_url = self.url.text()
         print(real_url)
-    
+
     #버튼에 연결된 코드
     def functionStart(self):
-        #크롬 드라이버 설정
+          #크롬 드라이버 설정
         driver = wd.Chrome(service=Service(ChromeDriverManager().install()))
         driver.get(real_url)
 
@@ -90,42 +92,57 @@ class Myapp(QMainWindow):
 
         #더보기 누른 횟수
         count = 0
-
-        #더보기 누르고 그 횟수를 저장하기. 만약 더보기가 끝났다면 몇번의 더보기 수행을 통해 끝났는지 출력하기.
+        #더보기 실행
+        times = 1
+        el = driver.find_element(By.CSS_SELECTOR , "span.text")
+        time.sleep(2)
+        el.click()
+        ele = driver.find_element(By.TAG_NAME , "body")
         while(True):
+            element = driver.find_elements(By.CSS_SELECTOR , "span.text")
             try:
-                count += 1
-                time.sleep(3)
-                element = driver.find_element(By.CSS_SELECTOR , 'a.u_cbox_btn_more')
-                element.send_keys('\n')
+                if(count == 0):
+                    act.move_to_element(element[19]).perform()
+                    ele.send_keys(Keys.PAGE_DOWN)
+                    count += 1
+                    times += 1
+                    time.sleep(1.5)
+                else:
+                    act.move_to_element(element[19 * times + (times - 1)]).perform()
+                    ele.send_keys(Keys.PAGE_DOWN)
+                    count += 1
+                    times += 1
+                    time.sleep(1.5)
             except:
-                print("더보기 완료 총 %d회의 더보기를 수행했습니다." %count)
+                print("총 %d번의 더보기를 수행했습니다." %count)
                 break
 
+        #파일 작성
+        name = driver.find_elements(By.CSS_SELECTOR , 'span.text')
+        name = [name.text for name in name]
 
-        #reviews 변수에 댓글을 저장
-        reviews = driver.find_elements(By.CSS_SELECTOR , 'span.u_cbox_contents')
-        reviews = [reviews.text for reviews in reviews]
+        price = driver.find_elements(By.CSS_SELECTOR , 'div.price_line')
+        price = [price.text for price in price]
 
-        #up변수에 공감수를 저장
-        up = driver.find_elements(By.CSS_SELECTOR,'em.u_cbox_cnt_recomm')
-        up = [up.text for up in up]
+        info = driver.find_elements(By.CSS_SELECTOR , 'div.info_area')
+        info = [info.text for info in info]
 
-        #down변수에 비공감 수를 저장
-        down = driver.find_elements(By.CSS_SELECTOR,'em.u_cbox_cnt_unrecomm')
-        down = [down.text for down in down]
+        cp_titel = driver.find_elements(By.CSS_SELECTOR , 'em.title')
+        cp_titel = [cp_titel.text for cp_titel in cp_titel]
 
-        #댓글, 공감 수, 비공감 수를 합침.
-        reply = list(zip(reviews , up , down))
+        cp_data = driver.find_elements(By.CSS_SELECTOR , 'em.data')
+        cp_data = [cp_data.text for cp_data in cp_data]
 
-        #reply를 txt파일로 작성하는 과정.
-        f = open(directory , 'w' , encoding = 'utf-8')
-        for data in reply:
+        result = list(zip(name, price , info ,cp_titel , cp_data))
+
+        f = open(directory , 'w' , encoding= 'utf-8')
+        for data in result:
             list(data)
-            for o in data:
-                f.write("%s\n" %o)
+            for i in data:
+                f.write("%s\n" %i)
         f.close
-
+        print("파일 작성을 완료했습니다.")
+    
     #프로그램을 화면 중앙에 정렬
     def center(self):
         qr = self.frameGeometry()
@@ -133,8 +150,8 @@ class Myapp(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-#프로그램 종료
+    #프로그램 종료
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = Myapp()
+    ex = naverland()
     sys.exit(app.exec_())
