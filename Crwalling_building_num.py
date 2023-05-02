@@ -111,6 +111,7 @@ class naverland(QMainWindow):
         ele = driver.find_element(By.TAG_NAME , "body")
         element = driver.find_elements(By.CSS_SELECTOR , "span.text")
         while(True):
+            time.sleep(0.5)
             element = driver.find_elements(By.CSS_SELECTOR , "span.text")
             if(int(realnum) == 1):
                 break
@@ -141,14 +142,14 @@ class naverland(QMainWindow):
         price = driver.find_elements(By.CSS_SELECTOR , 'div.price_line')
         price = [price.text for price in price]
 
-        info = driver.find_elements(By.CSS_SELECTOR , 'div.info_area')
+        info = driver.find_elements(By.CSS_SELECTOR , 'span.spec')
         info = [info.text for info in info]
 
-        #cp_titel = driver.find_elements(By.CSS_SELECTOR , 'em.title')
-        #cp_titel = [cp_titel.text for cp_titel in cp_titel]
+        cp_titel = driver.find_elements(By.CSS_SELECTOR , 'em.title')
+        cp_titel = [cp_titel.text for cp_titel in cp_titel]
 
-        #cp_data = driver.find_elements(By.CSS_SELECTOR , 'em.data')
-        #cp_data = [cp_data.text for cp_data in cp_data]
+        cp_data = driver.find_elements(By.CSS_SELECTOR , 'em.data')
+        cp_data = [cp_data.text for cp_data in cp_data]
 
         result = list(zip(name, price , info))
 
