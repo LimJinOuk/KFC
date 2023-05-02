@@ -99,6 +99,7 @@ class naverland(QMainWindow):
         el.click()
         ele = driver.find_element(By.TAG_NAME , "body")
         while(True):
+            time.sleep(2)
             element = driver.find_elements(By.CSS_SELECTOR , "span.text")
             try:
                 if(count == 0):
@@ -124,16 +125,16 @@ class naverland(QMainWindow):
         price = driver.find_elements(By.CSS_SELECTOR , 'div.price_line')
         price = [price.text for price in price]
 
-        info = driver.find_elements(By.CSS_SELECTOR , 'div.info_area')
+        info = driver.find_elements(By.CSS_SELECTOR , 'span.spec')
         info = [info.text for info in info]
 
-        #cp_titel = driver.find_elements(By.CSS_SELECTOR , 'em.title')
-        #cp_titel = [cp_titel.text for cp_titel in cp_titel]
+        cp_titel = driver.find_elements(By.CSS_SELECTOR , 'em.title')
+        cp_titel = [cp_titel.text for cp_titel in cp_titel]
 
-        #cp_data = driver.find_elements(By.CSS_SELECTOR , 'em.data')
-        #cp_data = [cp_data.text for cp_data in cp_data]
+        cp_data = driver.find_elements(By.CSS_SELECTOR , 'em.data')
+        cp_data = [cp_data.text for cp_data in cp_data]
 
-        result = list(zip(name, price , info))
+        result = list(zip(name, price , info,cp_titel , cp_data))
 
         f = open(directory , 'w' , encoding= 'utf-8')
         for data in result:
