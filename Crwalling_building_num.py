@@ -144,13 +144,13 @@ class naverland(QMainWindow):
         info = driver.find_elements(By.CSS_SELECTOR , 'div.info_area')
         info = [info.text for info in info]
 
-        cp_titel = driver.find_elements(By.CSS_SELECTOR , 'em.title')
-        cp_titel = [cp_titel.text for cp_titel in cp_titel]
+        #cp_titel = driver.find_elements(By.CSS_SELECTOR , 'em.title')
+        #cp_titel = [cp_titel.text for cp_titel in cp_titel]
 
-        cp_data = driver.find_elements(By.CSS_SELECTOR , 'em.data')
-        cp_data = [cp_data.text for cp_data in cp_data]
+        #cp_data = driver.find_elements(By.CSS_SELECTOR , 'em.data')
+        #cp_data = [cp_data.text for cp_data in cp_data]
 
-        result = list(zip(name, price , info ,cp_titel , cp_data))
+        result = list(zip(name, price , info))
 
         f = open(directory , 'w' , encoding= 'utf-8')
         for data in result:
