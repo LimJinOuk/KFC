@@ -9,7 +9,7 @@ from selenium.webdriver.common.keys import Keys
 import sys
 from PyQt5.QtWidgets import *
 import requests
-
+#객체(Class)생성
 class naverland(QMainWindow):
     #초기 설정
     def __init__(self):
@@ -35,6 +35,7 @@ class naverland(QMainWindow):
 
         #버튼 연결
         btn1.clicked.connect(self.functionStart)
+
         #ui보이기
         self.resize(500, 350)
         self.center()
@@ -47,16 +48,19 @@ class naverland(QMainWindow):
         QLabel('네이버 부동산 url.:' , self)
         QLabel('입력 횟수 설정' , self)
         self.able_label = QLabel('' , self)
+
         #input directory
         self.dt_entry = QLineEdit(self)
         self.dt_entry.move(130,45)
         self.dt_entry.setPlaceholderText('파일이 저장될 위치')
         self.dt_entry.textChanged.connect(self.save_DT)
+
         #inputURL
         self.url = QLineEdit(self)
         self.url.move(130 , 75)
         self.url.setPlaceholderText('URL입력:')
         self.url.textChanged.connect(self.save_URL)
+
         #num
         self.num = QLineEdit(self)
         self.num.move(130,105)
@@ -79,6 +83,7 @@ class naverland(QMainWindow):
                 temp_list.append(temp)
             else:
                 temp_list.append(temp)
+
         #주소 저장
         global directory
         directory = second_directory.join(temp_list)
@@ -92,9 +97,8 @@ class naverland(QMainWindow):
         print(real_url)
 
     #버튼에 연결된 코드
-    #버튼에 연결된 코드
     def functionStart(self):
-          #크롬 드라이버 설정
+        #크롬 드라이버 설정
         driver = wd.Chrome(service=Service(ChromeDriverManager().install()))
         driver.get(real_url)
 
@@ -103,6 +107,7 @@ class naverland(QMainWindow):
 
         #더보기 누른 횟수
         count = 0
+
         #더보기 실행
         times = 1
         el = driver.find_element(By.CSS_SELECTOR , "span.text")
@@ -168,7 +173,7 @@ class naverland(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    #프로그램 종료
+#프로그램 종료
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = naverland()
